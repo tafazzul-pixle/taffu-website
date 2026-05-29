@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart City Monitor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>AI Smart City Traffic & Environment Monitoring</h1>
+
+<form action="result.php" method="POST">
+    
+    <label>Traffic Level:</label>
+    <select name="traffic">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+    </select>
+
+    <label>Air Quality:</label>
+    <select name="air">
+        <option value="good">Good</option>
+        <option value="moderate">Moderate</option>
+        <option value="poor">Poor</option>
+    </select>
+
+    <button type="submit">Check Status</button>
+
+</form>
+
+</body>
+</html>
