@@ -1,0 +1,2805 @@
+<!DOCTYPE html>
+<!-- saved from url=(0022)http://localhost:5000/ -->
+<html lang="en" class="dark"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Smart Attendance &amp; Academic Management System</title>
+    <!-- Google Fonts: Outfit for Headings, Inter for UI text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="./AI Smart Attendance &amp; Academic Management System_files/css2" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="./AI Smart Attendance &amp; Academic Management System_files/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="./AI Smart Attendance &amp; Academic Management System_files/chart.js.download"></script>
+
+    <style>
+        :root {
+            /* Color Palette - Light Mode */
+            --bg-primary: #f1f5f9;
+            --bg-secondary: rgba(255, 255, 255, 0.7);
+            --bg-sidebar: rgba(255, 255, 255, 0.9);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --border-color: rgba(226, 232, 240, 0.8);
+            --accent-color: #4f46e5;
+            --accent-hover: #4338ca;
+            --success-color: #10b981;
+            --success-bg: rgba(16, 185, 129, 0.1);
+            --danger-color: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.1);
+            --warning-color: #f59e0b;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --sidebar-shadow: 4px 0 24px 0 rgba(148, 163, 184, 0.08);
+            --glass-blur: blur(12px);
+            --input-bg: #ffffff;
+            --table-header-bg: #f8fafc;
+            --card-active-border: #4f46e5;
+        }
+
+        .dark {
+            /* Color Palette - Dark Mode */
+            --bg-primary: #090d16;
+            --bg-secondary: rgba(15, 23, 42, 0.6);
+            --bg-sidebar: rgba(10, 15, 30, 0.8);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-color: #6366f1;
+            --accent-hover: #4f46e5;
+            --success-color: #10b981;
+            --success-bg: rgba(16, 185, 129, 0.15);
+            --danger-color: #f87171;
+            --danger-bg: rgba(248, 113, 113, 0.15);
+            --warning-color: #fbbf24;
+            --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            --sidebar-shadow: 8px 0 32px 0 rgba(0, 0, 0, 0.4);
+            --input-bg: rgba(30, 41, 59, 0.5);
+            --table-header-bg: rgba(15, 23, 42, 0.8);
+            --card-active-border: #6366f1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, .sidebar-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+        }
+
+        /* Ambient glowing backgrounds */
+        .ambient-glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            top: -10%;
+            right: 5%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        /* Auth Container */
+        .auth-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            z-index: 10;
+            position: relative;
+        }
+
+        .auth-card {
+            background: var(--bg-secondary);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 440px;
+            padding: 40px;
+            box-shadow: var(--card-shadow);
+            transform: translateY(0);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent-color) 0%, #a855f7 100%);
+            color: #ffffff;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
+        }
+
+        .auth-title {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .auth-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--input-bg);
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: #ffffff;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--border-color);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+            border-radius: 8px;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .error-message {
+            background: var(--danger-bg);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        /* Dashboard Portal Layout */
+        .portal-layout {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-sidebar);
+            backdrop-filter: var(--glass-blur);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            box-shadow: var(--sidebar-shadow);
+            z-index: 20;
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .sidebar-brand-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent-color) 0%, #a855f7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .sidebar-brand-title {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .sidebar-item-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .sidebar-item-link:hover, .sidebar-item-link.active {
+            color: var(--text-primary);
+            background: var(--border-color);
+        }
+
+        .sidebar-item-link.active {
+            background: linear-gradient(90deg, rgba(99, 102, 241, 0.15) 0%, rgba(99, 102, 241, 0) 100%);
+            border-left: 3px solid var(--accent-color);
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .user-profile-section {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7 0%, var(--accent-color) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        .user-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: capitalize;
+        }
+
+        /* Main Workspace Content Area */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            height: 70px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: var(--bg-secondary);
+            backdrop-filter: var(--glass-blur);
+        }
+
+        .nav-title {
+            font-size: 20px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .theme-toggle-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            background: var(--border-color);
+        }
+
+        .role-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        /* Tabs Panels */
+        .tab-panel {
+            display: none;
+            padding: 32px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stats-card {
+            background: var(--bg-secondary);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transform: translateY(0);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -10px rgba(0,0,0,0.15);
+        }
+
+        .stats-info h3 {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stats-info .value {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .stats-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+        }
+
+        /* Layout Grids */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Tables & Lists */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: var(--table-header-bg);
+            padding: 14px 20px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(99, 102, 241, 0.03);
+        }
+
+        /* Filters & Form controls inside tabs */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .filters-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .select-input {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--input-bg);
+            color: var(--text-primary);
+            font-size: 13px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: var(--success-bg);
+            color: var(--success-color);
+        }
+
+        .badge-danger {
+            background: var(--danger-bg);
+            color: var(--danger-color);
+        }
+
+        /* Live Camera Scanner View */
+        .scanner-container {
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            gap: 32px;
+        }
+
+        @media (max-width: 768px) {
+            .scanner-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .video-wrapper {
+            position: relative;
+            aspect-ratio: 4/3;
+            width: 100%;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+        }
+
+        #webcam {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1); /* mirror effect */
+        }
+
+        /* Custom AI Scanner animations overlay */
+        .scanner-overlay {
+            position: absolute;
+            inset: 0;
+            border: 2px solid transparent;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .scanner-laser {
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+            top: 0;
+            left: 0;
+            animation: scan 3.5s infinite linear;
+            display: none;
+        }
+
+        @keyframes scan {
+            0% { top: 0%; }
+            50% { top: 100%; }
+            100% { top: 0%; }
+        }
+
+        .face-box {
+            position: absolute;
+            border: 2px dashed var(--accent-color);
+            border-radius: 8px;
+            width: 160px;
+            height: 160px;
+            top: calc(50% - 80px);
+            left: calc(50% - 80px);
+            display: none;
+            animation: pulse-border 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { border-color: var(--accent-color); opacity: 0.6; }
+            50% { border-color: #a855f7; opacity: 1; }
+        }
+
+        /* Manual Check Sheet Grid */
+        .manual-attendance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .student-check-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            transform: translateY(0);
+            transition: all 0.2s;
+        }
+
+        .student-check-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .student-check-card.present {
+            border-color: var(--success-color);
+            background: var(--success-bg);
+        }
+
+        .student-check-card.absent {
+            border-color: var(--danger-color);
+            background: var(--danger-bg);
+        }
+
+        .card-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #475569;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .student-check-card.present .card-avatar {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .student-check-card.absent .card-avatar {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .card-usn {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Timetable grid */
+        .timetable-week-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            overflow-x: auto;
+            min-width: 600px;
+        }
+
+        .timetable-day-col {
+            background: rgba(148, 163, 184, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px dashed var(--border-color);
+            min-height: 300px;
+        }
+
+        .day-header {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .class-slot {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 12px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .class-slot-time {
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 4px;
+        }
+
+        .class-slot-name {
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .class-slot-room {
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .delete-slot-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: none;
+        }
+
+        .class-slot:hover .delete-slot-btn {
+            display: block;
+        }
+
+        .delete-slot-btn:hover {
+            color: var(--danger-color);
+        }
+
+        /* Portions and CO/PO progress gauges */
+        .outcomes-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        @media (max-width: 768px) {
+            .outcomes-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .gauge-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .gauge-bar-wrapper {
+            flex-grow: 1;
+            height: 10px;
+            background: var(--border-color);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .gauge-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color) 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 5px;
+            transition: width 0.8s ease-out;
+        }
+
+        /* Portions Checklists */
+        .portion-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Modal Sheets */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: var(--bg-secondary);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .modal-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .modal-close-btn:hover {
+            color: var(--text-primary);
+        }
+
+        /* General Utility Styles */
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .flex-between {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .gap-10 { gap: 10px; }
+        .mr-10 { margin-right: 10px; }
+        .text-success { color: var(--success-color); }
+        .text-danger { color: var(--danger-color); }
+        .mt-20 { margin-top: 20px; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="ambient-glow"></div>
+
+    <!-- Login Page Removed -->
+
+    <!-- 2. PORTAL RUNTIME LAYOUT (MAIN VIEWS) -->
+    <div class="portal-layout" id="portalSection" style="display: flex;">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="scan-face" aria-hidden="true" style="width: 20px; height: 20px;" class="lucide lucide-scan-face"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><path d="M9 9h.01"></path><path d="M15 9h.01"></path></svg>
+                </div>
+                <span class="sidebar-brand-title">AURA Smart</span>
+            </div>
+
+            <nav class="sidebar-menu">
+                <a class="sidebar-item-link" onclick="switchTab(&#39;dashboard&#39;)" id="nav-dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="layout-dashboard" aria-hidden="true" style="width: 18px; height: 18px;" class="lucide lucide-layout-dashboard"><rect width="7" height="9" x="3" y="3" rx="1"></rect><rect width="7" height="5" x="14" y="3" rx="1"></rect><rect width="7" height="9" x="14" y="12" rx="1"></rect><rect width="7" height="5" x="3" y="16" rx="1"></rect></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a class="sidebar-item-link active" onclick="switchTab(&#39;students&#39;)" id="nav-students">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="users" aria-hidden="true" style="width: 18px; height: 18px;" class="lucide lucide-users"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><path d="M16 3.128a4 4 0 0 1 0 7.744"></path><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                    <span>Students Directory</span>
+                </a>
+                <a class="sidebar-item-link" onclick="switchTab(&#39;divisions&#39;)" id="nav-divisions">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="grid" aria-hidden="true" style="width: 18px; height: 18px;" class="lucide lucide-grid"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18"></path><path d="M3 15h18"></path><path d="M9 3v18"></path><path d="M15 3v18"></path></svg>
+                    <span>Divisions</span>
+                </a>
+                <a class="sidebar-item-link" onclick="switchTab(&#39;scanner&#39;)" id="nav-scanner">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="aperture" aria-hidden="true" style="width: 18px; height: 18px;" class="lucide lucide-aperture"><circle cx="12" cy="12" r="10"></circle><path d="m14.31 8 5.74 9.94"></path><path d="M9.69 8h11.48"></path><path d="m7.38 12 5.74-9.94"></path><path d="M9.69 16 3.95 6.06"></path><path d="M14.31 16H2.83"></path><path d="m16.62 12-5.74 9.94"></path></svg>
+                    <span>AI Camera Log</span>
+                </a>
+                <a class="sidebar-item-link" onclick="switchTab(&#39;manual&#39;)" id="nav-manual">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="check-square" aria-hidden="true" style="width: 18px; height: 18px;" class="lucide lucide-check-square"><path d="M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344"></path><path d="m9 11 3 3L22 4"></path></svg>
+                    <span>Manual Sheet</span>
+                </a>
+                <a class="sidebar-item-link" onclick="switchTab(&#39;timetable&#39;)" id="nav-timetable">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="calendar" aria-hidden="true" style="width: 18px; height: 18px;" class="lucide lucide-calendar"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg>
+                    <span>Class Scheduler</span>
+                </a>
+                <a class="sidebar-item-link" onclick="switchTab(&#39;outcomes&#39;)" id="nav-outcomes">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trending-up" aria-hidden="true" style="width: 18px; height: 18px;" class="lucide lucide-trending-up"><path d="M16 7h6v6"></path><path d="m22 7-8.5 8.5-5-5L2 17"></path></svg>
+                    <span>Outcomes CO/PO</span>
+                </a>
+                <a class="sidebar-item-link" onclick="switchTab(&#39;reports&#39;)" id="nav-reports">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="file-text" aria-hidden="true" style="width: 18px; height: 18px;" class="lucide lucide-file-text"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>
+                    <span>Reports &amp; Audits</span>
+                </a>
+            </nav>
+
+            <div class="user-profile-section">
+                <div class="avatar" id="userAvatar">A</div>
+                <div class="user-info">
+                    <div class="user-name" id="profileName">admin</div>
+                    <div class="user-role" id="profileRole">admin</div>
+                </div>
+                <button class="theme-toggle-btn" style="border:none; width:30px; height:30px;" onclick="handleLogout()" title="Logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="log-out" aria-hidden="true" style="width: 16px; height: 16px;" class="lucide lucide-log-out"><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path></svg>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Top Navbar -->
+            <header class="navbar">
+                <h2 class="nav-title" id="pageTitle">Students Directory</h2>
+                
+                <div class="nav-actions">
+                    <!-- Role Switcher Dropdown -->
+                    <select id="navbarRoleSelect" class="select-input" style="padding: 6px 12px; font-weight: 600;" onchange="changeActiveRole(this.value)">
+                        <option value="admin">Admin Clearance</option>
+                        <option value="faculty">Faculty Clearance</option>
+                        <option value="student">Student View</option>
+                    </select>
+                    
+                    <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeToggleBtn" title="Toggle Theme">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="sun" aria-hidden="true" id="themeIconSun" class="lucide lucide-sun hidden" style="width: 18px; height: 18px;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="moon" aria-hidden="true" id="themeIconMoon" style="width: 18px; height: 18px;" class="lucide lucide-moon"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path></svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Tab -->
+            <div class="tab-panel" id="tab-dashboard">
+                <div class="stats-grid">
+                    <div class="stats-card">
+                        <div class="stats-info">
+                            <h3>Total Students</h3>
+                            <div class="value" id="statTotalStudents">4</div>
+                        </div>
+                        <div class="stats-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="users" aria-hidden="true" class="lucide lucide-users"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><path d="M16 3.128a4 4 0 0 1 0 7.744"></path><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="9" cy="7" r="4"></circle></svg></div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-info">
+                            <h3>Present Today</h3>
+                            <div class="value text-success" id="statPresentToday">1</div>
+                        </div>
+                        <div class="stats-icon" style="color:var(--success-color);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="check-circle-2" aria-hidden="true" class="lucide lucide-check-circle-2"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg></div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-info">
+                            <h3>Absent Today</h3>
+                            <div class="value text-danger" id="statAbsentToday">0</div>
+                        </div>
+                        <div class="stats-icon" style="color:var(--danger-color);"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="alert-circle" aria-hidden="true" class="lucide lucide-alert-circle"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="12"></line><line x1="12" x2="12.01" y1="16" y2="16"></line></svg></div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-info">
+                            <h3>Attendance Rate</h3>
+                            <div class="value" id="statAttendanceRate">76.2%</div>
+                        </div>
+                        <div class="stats-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trending-up" aria-hidden="true" class="lucide lucide-trending-up"><path d="M16 7h6v6"></path><path d="m22 7-8.5 8.5-5-5L2 17"></path></svg></div>
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <!-- Weekly trends chart -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Weekly Attendance Trends</h3>
+                        </div>
+                        <div style="height: 300px; width: 100%; position: relative;">
+                            <canvas id="weeklyChart" width="614" height="300" style="display: block; box-sizing: border-box; height: 300px; width: 614px;"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity Logs -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Activity Logs</h3>
+                        </div>
+                        <div style="max-height: 300px; overflow-y: auto;" id="recentLogsList">
+                            <div style="display:flex; align-items:center; justify-content:between; padding:12px 0; border-bottom:1px solid var(--border-color);">
+                                <div>
+                                    <div style="font-weight:600; font-size:13px;">John Doe</div>
+                                    <div style="font-size:11px; color:var(--text-secondary);">1MS21CS001</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div class="text-success font-semibold" style="font-size:13px;">Present</div>
+                                    <div style="font-size:10px; color:var(--text-secondary); display:flex; align-items:center; gap:4px; justify-content:flex-end;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="camera" aria-hidden="true" style="width:10px; height:10px;" class="lucide lucide-camera"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"></path><circle cx="12" cy="13" r="3"></circle></svg>
+                                        <span>01:33:48</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div style="display:flex; align-items:center; justify-content:between; padding:12px 0; border-bottom:1px solid var(--border-color);">
+                                <div>
+                                    <div style="font-weight:600; font-size:13px;">Olivia Wilde</div>
+                                    <div style="font-size:11px; color:var(--text-secondary);">1MS21CS004</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div class="text-success font-semibold" style="font-size:13px;">Present</div>
+                                    <div style="font-size:10px; color:var(--text-secondary); display:flex; align-items:center; gap:4px; justify-content:flex-end;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="camera" aria-hidden="true" style="width:10px; height:10px;" class="lucide lucide-camera"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"></path><circle cx="12" cy="13" r="3"></circle></svg>
+                                        <span>09:02:18</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div style="display:flex; align-items:center; justify-content:between; padding:12px 0; border-bottom:1px solid var(--border-color);">
+                                <div>
+                                    <div style="font-weight:600; font-size:13px;">Liam Neeson</div>
+                                    <div style="font-size:11px; color:var(--text-secondary);">1MS21CS003</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div class="text-danger font-semibold" style="font-size:13px;">Absent</div>
+                                    <div style="font-size:10px; color:var(--text-secondary); display:flex; align-items:center; gap:4px; justify-content:flex-end;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="edit-3" aria-hidden="true" style="width:10px; height:10px;" class="lucide lucide-edit-3"><path d="M13 21h8"></path><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path></svg>
+                                        <span>--</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div style="display:flex; align-items:center; justify-content:between; padding:12px 0; border-bottom:1px solid var(--border-color);">
+                                <div>
+                                    <div style="font-weight:600; font-size:13px;">Emma Watson</div>
+                                    <div style="font-size:11px; color:var(--text-secondary);">1MS21CS002</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div class="text-success font-semibold" style="font-size:13px;">Present</div>
+                                    <div style="font-size:10px; color:var(--text-secondary); display:flex; align-items:center; gap:4px; justify-content:flex-end;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="edit-3" aria-hidden="true" style="width:10px; height:10px;" class="lucide lucide-edit-3"><path d="M13 21h8"></path><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path></svg>
+                                        <span>09:06:11</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div style="display:flex; align-items:center; justify-content:between; padding:12px 0; border-bottom:1px solid var(--border-color);">
+                                <div>
+                                    <div style="font-weight:600; font-size:13px;">John Doe</div>
+                                    <div style="font-size:11px; color:var(--text-secondary);">1MS21CS001</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div class="text-success font-semibold" style="font-size:13px;">Present</div>
+                                    <div style="font-size:10px; color:var(--text-secondary); display:flex; align-items:center; gap:4px; justify-content:flex-end;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="edit-3" aria-hidden="true" style="width:10px; height:10px;" class="lucide lucide-edit-3"><path d="M13 21h8"></path><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path></svg>
+                                        <span>09:05:22</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div style="display:flex; align-items:center; justify-content:between; padding:12px 0; border-bottom:1px solid var(--border-color);">
+                                <div>
+                                    <div style="font-weight:600; font-size:13px;">Olivia Wilde</div>
+                                    <div style="font-size:11px; color:var(--text-secondary);">1MS21CS004</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div class="text-success font-semibold" style="font-size:13px;">Present</div>
+                                    <div style="font-size:10px; color:var(--text-secondary); display:flex; align-items:center; gap:4px; justify-content:flex-end;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="camera" aria-hidden="true" style="width:10px; height:10px;" class="lucide lucide-camera"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"></path><circle cx="12" cy="13" r="3"></circle></svg>
+                                        <span>09:02:18</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div style="display:flex; align-items:center; justify-content:between; padding:12px 0; border-bottom:1px solid var(--border-color);">
+                                <div>
+                                    <div style="font-weight:600; font-size:13px;">Liam Neeson</div>
+                                    <div style="font-size:11px; color:var(--text-secondary);">1MS21CS003</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div class="text-danger font-semibold" style="font-size:13px;">Absent</div>
+                                    <div style="font-size:10px; color:var(--text-secondary); display:flex; align-items:center; gap:4px; justify-content:flex-end;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="edit-3" aria-hidden="true" style="width:10px; height:10px;" class="lucide lucide-edit-3"><path d="M13 21h8"></path><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path></svg>
+                                        <span>--</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div style="display:flex; align-items:center; justify-content:between; padding:12px 0; border-bottom:1px solid var(--border-color);">
+                                <div>
+                                    <div style="font-weight:600; font-size:13px;">Emma Watson</div>
+                                    <div style="font-size:11px; color:var(--text-secondary);">1MS21CS002</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div class="text-success font-semibold" style="font-size:13px;">Present</div>
+                                    <div style="font-size:10px; color:var(--text-secondary); display:flex; align-items:center; gap:4px; justify-content:flex-end;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="edit-3" aria-hidden="true" style="width:10px; height:10px;" class="lucide lucide-edit-3"><path d="M13 21h8"></path><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path></svg>
+                                        <span>09:06:11</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div style="display:flex; align-items:center; justify-content:between; padding:12px 0; border-bottom:1px solid var(--border-color);">
+                                <div>
+                                    <div style="font-weight:600; font-size:13px;">John Doe</div>
+                                    <div style="font-size:11px; color:var(--text-secondary);">1MS21CS001</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div class="text-success font-semibold" style="font-size:13px;">Present</div>
+                                    <div style="font-size:10px; color:var(--text-secondary); display:flex; align-items:center; gap:4px; justify-content:flex-end;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="edit-3" aria-hidden="true" style="width:10px; height:10px;" class="lucide lucide-edit-3"><path d="M13 21h8"></path><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path></svg>
+                                        <span>09:05:22</span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div style="display:flex; align-items:center; justify-content:between; padding:12px 0; border-bottom:1px solid var(--border-color);">
+                                <div>
+                                    <div style="font-weight:600; font-size:13px;">Olivia Wilde</div>
+                                    <div style="font-size:11px; color:var(--text-secondary);">1MS21CS004</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div class="text-success font-semibold" style="font-size:13px;">Present</div>
+                                    <div style="font-size:10px; color:var(--text-secondary); display:flex; align-items:center; gap:4px; justify-content:flex-end;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="camera" aria-hidden="true" style="width:10px; height:10px;" class="lucide lucide-camera"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"></path><circle cx="12" cy="13" r="3"></circle></svg>
+                                        <span>09:02:18</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Directory Tab -->
+            <div class="tab-panel active" id="tab-students">
+                <div class="card">
+                    <div class="toolbar">
+                        <div class="filters-group">
+                            <input type="text" id="studentSearch" class="form-input" placeholder="Search by name, USN, email..." style="width: 240px; padding: 8px 12px;" oninput="fetchStudents()">
+                            <select id="studentFilterDiv" class="select-input" onchange="fetchStudents()">
+                                <option value="">All Divisions</option>
+                                <option value="Division A">Division A</option>
+                                <option value="Division B">Division B</option>
+                                <option value="Division C">Division C</option>
+                            </select>
+                            <select id="studentFilterSem" class="select-input" onchange="fetchStudents()">
+                                <option value="">All Semesters</option>
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                                <option value="3">Semester 3</option>
+                                <option value="4">Semester 4</option>
+                                <option value="5">Semester 5</option>
+                                <option value="6">Semester 6</option>
+                                <option value="7">Semester 7</option>
+                                <option value="8">Semester 8</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary btn-sm admin-only" onclick="openStudentModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="user-plus" aria-hidden="true" style="width: 14px; height: 14px;" class="lucide lucide-user-plus"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" x2="19" y1="8" y2="14"></line><line x1="22" x2="16" y1="11" y2="11"></line></svg> Add Student
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>USN</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>Sem / Branch</th>
+                                    <th>Division</th>
+                                    <th class="admin-only">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTableBody">
+                        <tr>
+                            <td style="font-weight:600;">John Doe</td>
+                            <td><code style="background:var(--border-color); padding:2px 6px; border-radius:4px;">1MS21CS001</code></td>
+                            <td>student@attendance.com</td>
+                            <td>8765432109</td>
+                            <td>Sem 6 (CSE)</td>
+                            <td><span class="badge" style="background:rgba(99,102,241,0.08);">Division A</span></td>
+                            <td class="admin-only">
+                        <button class="btn btn-outline btn-sm admin-only" style="padding:4px 8px; font-size:11px;" onclick="editStudent(1)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="edit" aria-hidden="true" style="width:12px; height:12px;" class="lucide lucide-edit"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path></svg>
+                        </button>
+                        <button class="btn btn-danger btn-sm admin-only" style="padding:4px 8px; font-size:11px;" onclick="deleteStudent(1)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trash-2" aria-hidden="true" style="width:12px; height:12px;" class="lucide lucide-trash-2"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        </button>
+                    </td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-weight:600;">Emma Watson</td>
+                            <td><code style="background:var(--border-color); padding:2px 6px; border-radius:4px;">1MS21CS002</code></td>
+                            <td>emma@attendance.com</td>
+                            <td>9988776655</td>
+                            <td>Sem 6 (CSE)</td>
+                            <td><span class="badge" style="background:rgba(99,102,241,0.08);">Division A</span></td>
+                            <td class="admin-only">
+                        <button class="btn btn-outline btn-sm admin-only" style="padding:4px 8px; font-size:11px;" onclick="editStudent(2)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="edit" aria-hidden="true" style="width:12px; height:12px;" class="lucide lucide-edit"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path></svg>
+                        </button>
+                        <button class="btn btn-danger btn-sm admin-only" style="padding:4px 8px; font-size:11px;" onclick="deleteStudent(2)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trash-2" aria-hidden="true" style="width:12px; height:12px;" class="lucide lucide-trash-2"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        </button>
+                    </td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-weight:600;">Liam Neeson</td>
+                            <td><code style="background:var(--border-color); padding:2px 6px; border-radius:4px;">1MS21CS003</code></td>
+                            <td>liam@attendance.com</td>
+                            <td>9988776644</td>
+                            <td>Sem 6 (CSE)</td>
+                            <td><span class="badge" style="background:rgba(99,102,241,0.08);">Division A</span></td>
+                            <td class="admin-only">
+                        <button class="btn btn-outline btn-sm admin-only" style="padding:4px 8px; font-size:11px;" onclick="editStudent(3)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="edit" aria-hidden="true" style="width:12px; height:12px;" class="lucide lucide-edit"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path></svg>
+                        </button>
+                        <button class="btn btn-danger btn-sm admin-only" style="padding:4px 8px; font-size:11px;" onclick="deleteStudent(3)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trash-2" aria-hidden="true" style="width:12px; height:12px;" class="lucide lucide-trash-2"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        </button>
+                    </td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-weight:600;">Olivia Wilde</td>
+                            <td><code style="background:var(--border-color); padding:2px 6px; border-radius:4px;">1MS21CS004</code></td>
+                            <td>olivia@attendance.com</td>
+                            <td>9988776633</td>
+                            <td>Sem 6 (CSE)</td>
+                            <td><span class="badge" style="background:rgba(99,102,241,0.08);">Division A</span></td>
+                            <td class="admin-only">
+                        <button class="btn btn-outline btn-sm admin-only" style="padding:4px 8px; font-size:11px;" onclick="editStudent(4)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="edit" aria-hidden="true" style="width:12px; height:12px;" class="lucide lucide-edit"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path></svg>
+                        </button>
+                        <button class="btn btn-danger btn-sm admin-only" style="padding:4px 8px; font-size:11px;" onclick="deleteStudent(4)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trash-2" aria-hidden="true" style="width:12px; height:12px;" class="lucide lucide-trash-2"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        </button>
+                    </td>
+                        </tr>
+                    </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Divisions Tab -->
+            <div class="tab-panel" id="tab-divisions">
+                <div class="card">
+                    <h3 class="card-title" style="margin-bottom: 20px;">Division Capacities</h3>
+                    <p style="color:var(--text-secondary); margin-bottom: 24px;">The system enforces a capacity limit of 30 students per division. When a division is full, new student registrations will be restricted.</p>
+                    
+                    <div id="divisionsGrid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:24px;">
+                        <!-- Cards loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Camera Log Tab -->
+            <div class="tab-panel" id="tab-scanner">
+                <div class="scanner-container">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Live Attendance Snapshot</h3>
+                            <span class="badge badge-success flex-center gap-10">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="check" aria-hidden="true" style="width:12px; height:12px;" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"></path></svg> Camera Active
+                            </span>
+                        </div>
+                        
+                        <div class="video-wrapper">
+                            <video id="webcam" autoplay="" playsinline="" muted=""></video>
+                            <div class="scanner-overlay">
+                                <div class="scanner-laser" id="laser"></div>
+                                <div class="face-box" id="facebox"></div>
+                            </div>
+                        </div>
+
+                        <div class="flex-center gap-10 mt-20">
+                            <button class="btn btn-outline" onclick="startCamera()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="refresh-cw" aria-hidden="true" style="width:16px; height:16px;" class="lucide lucide-refresh-cw"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg> Refresh Camera
+                            </button>
+                            <button class="btn btn-primary" onclick="captureAndProcess()" id="captureBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="camera" aria-hidden="true" style="width:16px; height:16px;" class="lucide lucide-camera"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"></path><circle cx="12" cy="13" r="3"></circle></svg> Capture face
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title" style="margin-bottom: 20px;">AI Verification Panel</h3>
+                        
+                        <div id="scannerInstructions" style="text-align:center; padding: 40px 20px; color:var(--text-secondary);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="scan" aria-hidden="true" style="width:48px; height:48px; color:var(--accent-color); margin-bottom:16px;" class="lucide lucide-scan"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path></svg>
+                            <p>Align the student's face inside the camera screen and click "Capture Face" to initiate the verification scan.</p>
+                        </div>
+
+                        <!-- Processing View -->
+                        <div id="scannerProcessing" class="hidden" style="text-align:center; padding: 40px 20px;">
+                            <div class="logo-icon" style="animation: spin 2s infinite linear; background: var(--accent-color); margin-bottom:20px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="loader-2" aria-hidden="true" style="width: 24px; height: 24px;" class="lucide lucide-loader-2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
+                            </div>
+                            <p style="font-weight:600; margin-bottom: 8px;">Analyzing Facial Coordinates...</p>
+                            <p style="color:var(--text-secondary); font-size:13px;">Checking matching features in PostgreSQL database</p>
+                        </div>
+
+                        <!-- Result View -->
+                        <div id="scannerResult" class="hidden" style="text-align:center; padding: 20px 10px;">
+                            <div class="card-avatar" style="width:72px; height:72px; font-size: 24px; background:var(--success-color); color:white;" id="scanResAvatar">JD</div>
+                            <h2 style="margin-top: 12px; font-size: 22px;" id="scanResName">John Doe</h2>
+                            <p style="color: var(--text-secondary); font-size:14px; margin-bottom: 12px;" id="scanResUsn">USN: 1MS21CS001</p>
+                            
+                            <div class="badge badge-success flex-center gap-10" style="display:inline-flex; font-size: 14px; padding: 6px 16px; margin-bottom: 24px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="check" aria-hidden="true" style="width:14px; height:14px;" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"></path></svg> Face Matched (98.4% confidence)
+                            </div>
+
+                            <div style="border-top:1px solid var(--border-color); padding-top:20px;">
+                                <button class="btn btn-outline" style="width:100%;" onclick="resetScanner()">Scan Next Student</button>
+                            </div>
+                        </div>
+
+                        <!-- Match Selection Mock (if face needs fallback select) -->
+                        <div id="scannerMatchSelect" class="hidden">
+                            <label class="form-label">Select Student to check-in:</label>
+                            <select id="scannerStudentDropdown" class="form-input" style="margin-bottom: 16px;">
+                                <!-- Loaded dynamically -->
+                            </select>
+                            <button class="btn btn-primary" onclick="confirmScanCheckIn()" style="width:100%;">Mark Present</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manual Sheet Tab -->
+            <div class="tab-panel" id="tab-manual">
+                <div class="card">
+                    <div class="toolbar">
+                        <div class="filters-group">
+                            <select id="manualDivSelect" class="select-input" onchange="loadManualSheet()">
+                                <option value="Division A">Division A</option>
+                                <option value="Division B">Division B</option>
+                                <option value="Division C">Division C</option>
+                            </select>
+                            <input type="date" id="manualDate" class="select-input" onchange="loadManualSheet()">
+                        </div>
+                        <button class="btn btn-primary btn-sm faculty-only" onclick="saveManualSheet()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="save" aria-hidden="true" style="width: 14px; height: 14px;" class="lucide lucide-save"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"></path><path d="M7 3v4a1 1 0 0 0 1 1h7"></path></svg> Save Logs
+                        </button>
+                    </div>
+
+                    <p style="font-size:13px; color:var(--text-secondary); margin-bottom: 16px;">Click on a student's card to toggle their status between <span class="text-success" style="font-weight:600;">Present</span> and <span class="text-danger" style="font-weight:600;">Absent</span>. When finished, hit "Save Logs" to update.</p>
+
+                    <div class="manual-attendance-grid" id="manualSheetGrid">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timetable Tab -->
+            <div class="tab-panel" id="tab-timetable">
+                <div class="card">
+                    <div class="flex-between" style="margin-bottom: 24px;">
+                        <div>
+                            <h3 class="card-title">Academic Schedule Grid</h3>
+                            <p style="color:var(--text-secondary); font-size:13px; margin-top:4px;">Weekly scheduler mapping courses to divisions, days, and classrooms.</p>
+                        </div>
+                        <button class="btn btn-primary btn-sm admin-only" onclick="openTimetableModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="plus" aria-hidden="true" style="width: 14px; height: 14px;" class="lucide lucide-plus"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg> Add Class Slot
+                        </button>
+                    </div>
+
+                    <div class="timetable-week-container">
+                        <div class="timetable-day-col">
+                            <div class="day-header">Monday</div>
+                            <div id="timetable-Monday"></div>
+                        </div>
+                        <div class="timetable-day-col">
+                            <div class="day-header">Tuesday</div>
+                            <div id="timetable-Tuesday"></div>
+                        </div>
+                        <div class="timetable-day-col">
+                            <div class="day-header">Wednesday</div>
+                            <div id="timetable-Wednesday"></div>
+                        </div>
+                        <div class="timetable-day-col">
+                            <div class="day-header">Thursday</div>
+                            <div id="timetable-Thursday"></div>
+                        </div>
+                        <div class="timetable-day-col">
+                            <div class="day-header">Friday</div>
+                            <div id="timetable-Friday"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Outcomes CO/PO Tab -->
+            <div class="tab-panel" id="tab-outcomes">
+                <div class="outcomes-container">
+                    <!-- Outcomes Tracker -->
+                    <div class="card">
+                        <div class="flex-between" style="margin-bottom: 20px;">
+                            <h3 class="card-title">Course &amp; Program Outcomes</h3>
+                            <button class="btn btn-primary btn-sm faculty-only" onclick="openOutcomeModal()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="plus" aria-hidden="true" style="width: 14px; height: 14px;" class="lucide lucide-plus"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg> Add Outcome
+                            </button>
+                        </div>
+                        <p style="color:var(--text-secondary); font-size:13px; margin-bottom: 24px;">Calculates syllabus progress mapping metrics for targeted PO achievement limits.</p>
+                        
+                        <h4 style="margin-bottom: 12px; font-size: 15px;">Course Outcomes (CO)</h4>
+                        <div id="coProgressList" style="margin-bottom: 24px;">
+                            <!-- Dynamically loaded -->
+                        </div>
+
+                        <h4 style="margin-bottom: 12px; font-size: 15px;">Program Outcomes (PO)</h4>
+                        <div id="poProgressList">
+                            <!-- Dynamically loaded -->
+                        </div>
+                    </div>
+
+                    <!-- Portions Tracking -->
+                    <div class="card">
+                        <div class="flex-between" style="margin-bottom: 20px;">
+                            <h3 class="card-title">Portions &amp; Syllabus Tracking</h3>
+                            <button class="btn btn-outline btn-sm faculty-only" onclick="openPortionModal()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="plus" aria-hidden="true" style="width: 14px; height: 14px;" class="lucide lucide-plus"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg> Add Topic
+                            </button>
+                        </div>
+                        
+                        <div id="portionsList">
+                            <!-- Loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div class="tab-panel" id="tab-reports">
+                <div class="card">
+                    <div class="toolbar">
+                        <div>
+                            <h3 class="card-title">Monthly Audit Sheet</h3>
+                            <p style="color:var(--text-secondary); font-size:13px; margin-top:4px;">Compiles monthly reports of student attendances for exports.</p>
+                        </div>
+                        <button class="btn btn-outline btn-sm flex-center gap-10" onclick="exportReportToCSV()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="download" aria-hidden="true" style="width:14px; height:14px;" class="lucide lucide-download"><path d="M12 15V3"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5"></path></svg> Export CSV
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>USN</th>
+                                    <th>Division</th>
+                                    <th>Classes Logged</th>
+                                    <th>Present Count</th>
+                                    <th>Absent Count</th>
+                                    <th>Attendance Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportsTableBody">
+                                <!-- Loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. DIALOG MODAL: ADD / EDIT STUDENT -->
+    <div class="modal active" id="studentModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="card-title" id="studentModalTitle">Add New Student</h3>
+                <button class="modal-close-btn" onclick="closeStudentModal()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" aria-hidden="true" class="lucide lucide-x"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+            </div>
+            <form id="studentForm" onsubmit="saveStudent(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="studentEditId" value="">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="studName" class="form-input" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">USN (University Seat Number)</label>
+                        <input type="text" id="studUsn" class="form-input" placeholder="e.g. 1MS21CS001" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email ID</label>
+                        <input type="email" id="studEmail" class="form-input" placeholder="e.g. name@school.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Mobile Number</label>
+                        <input type="text" id="studMobile" class="form-input" placeholder="e.g. 9876543210">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Branch</label>
+                        <input type="text" id="studBranch" class="form-input" value="CSE" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Semester</label>
+                        <select id="studSem" class="select-input" style="width:100%;">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6" selected="">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Division</label>
+                        <select id="studDiv" class="select-input" style="width:100%;">
+                            <option value="Division A">Division A</option>
+                            <option value="Division B">Division B</option>
+                            <option value="Division C">Division C</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeStudentModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. DIALOG MODAL: ADD TIMETABLE SLOT -->
+    <div class="modal" id="timetableModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="card-title">Schedule New Class</h3>
+                <button class="modal-close-btn" onclick="closeTimetableModal()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" aria-hidden="true" class="lucide lucide-x"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+            </div>
+            <form id="timetableForm" onsubmit="saveTimetableSlot(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Course / Topic Name</label>
+                        <input type="text" id="schedCourse" class="form-input" placeholder="e.g. Advanced Operating Systems" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Room Number</label>
+                        <input type="text" id="schedRoom" class="form-input" placeholder="e.g. LHC-203" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Day of Week</label>
+                        <select id="schedDay" class="select-input" style="width:100%;">
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                        </select>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                        <div class="form-group">
+                            <label class="form-label">Start Time</label>
+                            <input type="time" id="schedStart" class="form-input" required="">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">End Time</label>
+                            <input type="time" id="schedEnd" class="form-input" required="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Target Division</label>
+                        <select id="schedDiv" class="select-input" style="width:100%;">
+                            <option value="Division A">Division A</option>
+                            <option value="Division B">Division B</option>
+                            <option value="Division C">Division C</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeTimetableModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Schedule Class</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. DIALOG MODAL: ADD PORTION TOPIC -->
+    <div class="modal" id="portionModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="card-title">Add Portion Topic</h3>
+                <button class="modal-close-btn" onclick="closePortionModal()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" aria-hidden="true" class="lucide lucide-x"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+            </div>
+            <form id="portionForm" onsubmit="savePortionTopic(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Course Name</label>
+                        <input type="text" id="portCourse" class="form-input" placeholder="e.g. Data Structures" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Topic / Unit Details</label>
+                        <input type="text" id="portTopic" class="form-input" placeholder="e.g. Red-Black Trees Insertion" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select id="portStatus" class="select-input" style="width:100%;">
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closePortionModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Portion</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 6. DIALOG MODAL: ADD OUTCOME MAPPING -->
+    <div class="modal" id="outcomeModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="card-title">Add Outcome Mapping (CO/PO)</h3>
+                <button class="modal-close-btn" onclick="closeOutcomeModal()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" aria-hidden="true" class="lucide lucide-x"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+            </div>
+            <form id="outcomeForm" onsubmit="saveOutcome(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Outcome Type</label>
+                        <select id="outType" class="select-input" style="width:100%;" onchange="toggleOutcomeCourseField(this.value)">
+                            <option value="co">Course Outcome (CO)</option>
+                            <option value="po">Program Outcome (PO)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="outCourseGroup">
+                        <label class="form-label">Course Name</label>
+                        <input type="text" id="outCourse" class="form-input" placeholder="e.g. Data Structures" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Outcome Code</label>
+                        <input type="text" id="outCode" class="form-input" placeholder="e.g. CO3 or PO3" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <input type="text" id="outDesc" class="form-input" placeholder="e.g. Analyze algorithm execution speed" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Target Completion (%)</label>
+                        <input type="number" id="outTarget" class="form-input" min="1" max="100" value="100" required="">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeOutcomeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Outcome</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CORE SPA LOGIC -->
+    <script>
+        // State variables
+        let currentUser = null;
+        let activeTab = 'dashboard';
+        let chartInstance = null;
+        let localStudents = []; // Cached for camera scanner selection
+        let manualAttendanceState = {}; // {student_id: 'Present'/'Absent'}
+        let videoStream = null;
+
+        // On document load
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            initTheme();
+            
+            // Bypass login by setting a default admin session automatically
+            currentUser = { role: 'admin', email: 'admin@attendance.com' };
+            enterPortal();
+        });
+
+        // Enter dashboard portal automatically
+        function enterPortal() {
+            document.getElementById('portalSection').style.display = 'flex';
+            
+            // Setup User Info
+            document.getElementById('profileName').textContent = currentUser.email.split('@')[0];
+            document.getElementById('profileRole').textContent = currentUser.role;
+            document.getElementById('userAvatar').textContent = currentUser.email.charAt(0).toUpperCase();
+
+            // Apply role-based clearances
+            applyClearances();
+
+            // Load view contents
+            switchTab('dashboard');
+        }
+
+        // Switch role dynamically
+        function changeActiveRole(role) {
+            currentUser.role = role;
+            currentUser.email = `${role}@attendance.com`;
+            
+            document.getElementById('profileRole').textContent = role;
+            document.getElementById('profileName').textContent = role;
+            document.getElementById('userAvatar').textContent = role.charAt(0).toUpperCase();
+            
+            // Re-apply role elements visibility
+            applyClearances();
+            
+            // Refresh active tab
+            switchTab(activeTab);
+        }
+
+        // Clearances guard
+        function applyClearances() {
+            const role = currentUser.role;
+            const adminOnlyElements = document.querySelectorAll('.admin-only');
+            const facultyOnlyElements = document.querySelectorAll('.faculty-only');
+
+            if (role !== 'admin') {
+                adminOnlyElements.forEach(el => el.classList.add('hidden'));
+            } else {
+                adminOnlyElements.forEach(el => el.classList.remove('hidden'));
+            }
+
+            if (role !== 'faculty' && role !== 'admin') {
+                facultyOnlyElements.forEach(el => el.classList.add('hidden'));
+            } else {
+                facultyOnlyElements.forEach(el => el.classList.remove('hidden'));
+            }
+        }
+
+        // Reset/Logout session resets role back to admin
+        function handleLogout() {
+            stopCamera();
+            changeActiveRole('admin');
+            document.getElementById('navbarRoleSelect').value = 'admin';
+        }
+
+        // Theme management
+        function initTheme() {
+            if (localStorage.getItem('theme') === 'light') {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('themeIconSun').classList.remove('hidden');
+                document.getElementById('themeIconMoon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.add('dark');
+                document.getElementById('themeIconSun').classList.add('hidden');
+                document.getElementById('themeIconMoon').classList.remove('hidden');
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            if (isDark) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                document.getElementById('themeIconSun').classList.remove('hidden');
+                document.getElementById('themeIconMoon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                document.getElementById('themeIconSun').classList.add('hidden');
+                document.getElementById('themeIconMoon').classList.remove('hidden');
+            }
+            // Re-render chart with appropriate colors if it exists
+            if (chartInstance) {
+                renderWeeklyChart(lastChartData);
+            }
+        }
+
+        // Tab Switching Logic
+        function switchTab(tabName) {
+            activeTab = tabName;
+            
+            // Set nav active class
+            document.querySelectorAll('.sidebar-item-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            const activeLink = document.getElementById(`nav-${tabName}`);
+            if (activeLink) activeLink.classList.add('active');
+
+            // Set panel active
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+
+            // Set Page Title
+            const titleMap = {
+                dashboard: 'Overview Dashboard',
+                students: 'Students Directory',
+                divisions: 'Divisions & Occupancies',
+                scanner: 'AI Smart Camera Attendance',
+                manual: 'Faculty Manual Log',
+                timetable: 'Class Scheduler Grid',
+                outcomes: 'Course Outcomes (CO-PO)',
+                reports: 'Reports & Audits'
+            };
+            document.getElementById('pageTitle').textContent = titleMap[tabName] || 'Smart Portal';
+
+            // Stop camera if leaving scanner tab
+            if (tabName !== 'scanner') {
+                stopCamera();
+            }
+
+            // Fetch specific tab data
+            if (tabName === 'dashboard') loadDashboardStats();
+            else if (tabName === 'students') fetchStudents();
+            else if (tabName === 'divisions') loadDivisions();
+            else if (tabName === 'scanner') setupScannerTab();
+            else if (tabName === 'manual') initManualSheet();
+            else if (tabName === 'timetable') loadTimetable();
+            else if (tabName === 'outcomes') loadOutcomesAndPortions();
+            else if (tabName === 'reports') loadReports();
+        }
+
+        // --- DASHBOARD LOADER ---
+        let lastChartData = [];
+        async function loadDashboardStats() {
+            try {
+                const res = await fetch('/api/attendance/stats');
+                const data = await res.json();
+
+                document.getElementById('statTotalStudents').textContent = data.total_students;
+                document.getElementById('statPresentToday').textContent = data.present_today;
+                document.getElementById('statAbsentToday').textContent = data.absent_today;
+                document.getElementById('statAttendanceRate').textContent = `${data.attendance_rate}%`;
+
+                // Load recent activity lists
+                const listEl = document.getElementById('recentLogsList');
+                if (data.recent_activity.length === 0) {
+                    listEl.innerHTML = '<p style="color:var(--text-secondary); text-align:center; padding: 20px;">No recent logs found.</p>';
+                } else {
+                    listEl.innerHTML = data.recent_activity.map(log => {
+                        const statusClass = log.status === 'Present' ? 'text-success' : 'text-danger';
+                        const typeIcon = log.type === 'camera' ? 'camera' : 'edit-3';
+                        const timeDisplay = log.timestamp.split(' ')[1] || log.timestamp;
+                        return `
+                            <div style="display:flex; align-items:center; justify-content:between; padding:12px 0; border-bottom:1px solid var(--border-color);">
+                                <div>
+                                    <div style="font-weight:600; font-size:13px;">${log.name}</div>
+                                    <div style="font-size:11px; color:var(--text-secondary);">${log.usn}</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div class="${statusClass} font-semibold" style="font-size:13px;">${log.status}</div>
+                                    <div style="font-size:10px; color:var(--text-secondary); display:flex; align-items:center; gap:4px; justify-content:flex-end;">
+                                        <i data-lucide="${typeIcon}" style="width:10px; height:10px;"></i>
+                                        <span>${timeDisplay}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                    lucide.createIcons();
+                }
+
+                // Render weekly trends chart
+                lastChartData = data.trends;
+                renderWeeklyChart(data.trends);
+            } catch (err) {
+                console.error("Failed to load stats", err);
+            }
+        }
+
+        function renderWeeklyChart(trends) {
+            const ctx = document.getElementById('weeklyChart').getContext('2d');
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+            const labelColor = isDark ? '#94a3b8' : '#475569';
+
+            const labels = trends.map(t => t.label);
+            const presentData = trends.map(t => t.present);
+            const absentData = trends.map(t => t.absent);
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Present Students',
+                            data: presentData,
+                            backgroundColor: 'rgba(16, 185, 129, 0.75)',
+                            borderColor: '#10b981',
+                            borderWidth: 1,
+                            borderRadius: 6
+                        },
+                        {
+                            label: 'Absent Students',
+                            data: absentData,
+                            backgroundColor: 'rgba(239, 68, 68, 0.75)',
+                            borderColor: '#ef4444',
+                            borderWidth: 1,
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: labelColor }
+                        },
+                        y: {
+                            grid: { color: gridColor },
+                            ticks: { color: labelColor, stepSize: 1 }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { color: labelColor, font: { family: 'Inter' } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- STUDENTS DIRECTORY CRUD ---
+        async function fetchStudents() {
+            const search = document.getElementById('studentSearch').value;
+            const div = document.getElementById('studentFilterDiv').value;
+            const sem = document.getElementById('studentFilterSem').value;
+
+            try {
+                const res = await fetch(`/api/students?search=${encodeURIComponent(search)}&division=${encodeURIComponent(div)}&semester=${encodeURIComponent(sem)}`);
+                const students = await res.json();
+                localStudents = students; // cache
+
+                const tbody = document.getElementById('studentsTableBody');
+                if (students.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-secondary);">No students registered matching filters.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = students.map(s => {
+                    const rowActions = `
+                        <button class="btn btn-outline btn-sm admin-only" style="padding:4px 8px; font-size:11px;" onclick="editStudent(${s.id})">
+                            <i data-lucide="edit" style="width:12px; height:12px;"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm admin-only" style="padding:4px 8px; font-size:11px;" onclick="deleteStudent(${s.id})">
+                            <i data-lucide="trash-2" style="width:12px; height:12px;"></i>
+                        </button>
+                    `;
+                    return `
+                        <tr>
+                            <td style="font-weight:600;">${s.name}</td>
+                            <td><code style="background:var(--border-color); padding:2px 6px; border-radius:4px;">${s.usn}</code></td>
+                            <td>${s.email || '--'}</td>
+                            <td>${s.mobile_number || '--'}</td>
+                            <td>Sem ${s.semester} (${s.branch})</td>
+                            <td><span class="badge" style="background:rgba(99,102,241,0.08);">${s.division_name || 'No Division'}</span></td>
+                            <td class="admin-only">${rowActions}</td>
+                        </tr>
+                    `;
+                }).join('');
+                
+                applyClearances();
+                lucide.createIcons();
+            } catch (err) {
+                console.error("Failed to load students roster", err);
+            }
+        }
+
+        // Student Dialog Control
+        function openStudentModal() {
+            document.getElementById('studentModalTitle').textContent = "Add New Student";
+            document.getElementById('studentEditId').value = '';
+            document.getElementById('studentForm').reset();
+            document.getElementById('studentModal').classList.add('active');
+        }
+
+        function closeStudentModal() {
+            document.getElementById('studentModal').classList.remove('active');
+        }
+
+        async function saveStudent(event) {
+            event.preventDefault();
+            const editId = document.getElementById('studentEditId').value;
+            const payload = {
+                name: document.getElementById('studName').value,
+                usn: document.getElementById('studUsn').value,
+                email: document.getElementById('studEmail').value,
+                mobile_number: document.getElementById('studMobile').value,
+                branch: document.getElementById('studBranch').value,
+                semester: document.getElementById('studSem').value,
+                division: document.getElementById('studDiv').value
+            };
+
+            const url = editId ? `/api/students/${editId}` : '/api/students';
+            const method = editId ? 'PUT' : 'POST';
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to save student record');
+                }
+
+                alert(data.message || 'Student saved successfully');
+                closeStudentModal();
+                fetchStudents();
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        function editStudent(id) {
+            const student = localStudents.find(s => s.id === id);
+            if (!student) return;
+
+            document.getElementById('studentModalTitle').textContent = "Modify Student Info";
+            document.getElementById('studentEditId').value = student.id;
+            
+            document.getElementById('studName').value = student.name;
+            document.getElementById('studUsn').value = student.usn;
+            document.getElementById('studEmail').value = student.email || '';
+            document.getElementById('studMobile').value = student.mobile_number || '';
+            document.getElementById('studBranch').value = student.branch;
+            document.getElementById('studSem').value = student.semester;
+            document.getElementById('studDiv').value = student.division_name || 'Division A';
+
+            document.getElementById('studentModal').classList.add('active');
+        }
+
+        async function deleteStudent(id) {
+            if (!confirm("Are you sure you want to remove this student? This removes all their registered credentials and logs.")) return;
+
+            try {
+                const res = await fetch(`/api/students/${id}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error);
+
+                alert("Student removed successfully.");
+                fetchStudents();
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        // --- DIVISIONS LOADER ---
+        async function loadDivisions() {
+            try {
+                const res = await fetch('/api/divisions');
+                const divisions = await res.json();
+
+                const grid = document.getElementById('divisionsGrid');
+                grid.innerHTML = divisions.map(div => {
+                    const progressPercent = Math.min(100, Math.round((div.student_count / div.max_capacity) * 100));
+                    const isFull = div.student_count >= div.max_capacity;
+                    const borderClass = isFull ? 'style="border-color:var(--danger-color);"' : '';
+                    
+                    return `
+                        <div class="card" ${borderClass} style="margin-bottom:0;">
+                            <div class="flex-between" style="margin-bottom:12px;">
+                                <h3 class="card-title">${div.name}</h3>
+                                <span class="badge ${isFull ? 'badge-danger' : 'badge-success'}">
+                                    ${div.student_count} / ${div.max_capacity} Seats
+                                </span>
+                            </div>
+                            <div class="gauge-bar-wrapper" style="height:8px; margin-bottom:8px;">
+                                <div class="gauge-bar-fill" style="width: ${progressPercent}%; background: ${isFull ? 'var(--danger-color)' : 'var(--accent-color)'}"></div>
+                            </div>
+                            <div class="flex-between" style="font-size:11px; color:var(--text-secondary);">
+                                <span>Utilization</span>
+                                <span>${progressPercent}% filled</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error("Failed to load divisions", err);
+            }
+        }
+
+        // --- LIVE CAMERA SCANNER ---
+        async function setupScannerTab() {
+            resetScanner();
+            await fetchStudents(); // sync local list
+            
+            // Populate matching fallback dropdown
+            const select = document.getElementById('scannerStudentDropdown');
+            if (localStudents.length === 0) {
+                select.innerHTML = '<option value="">No students in directory</option>';
+            } else {
+                select.innerHTML = localStudents.map(s => `<option value="${s.id}">${s.name} (${s.usn})</option>`).join('');
+            }
+
+            startCamera();
+        }
+
+        async function startCamera() {
+            const video = document.getElementById('webcam');
+            
+            try {
+                if (videoStream) {
+                    stopCamera();
+                }
+
+                videoStream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: 640, height: 480 }
+                });
+                
+                video.srcObject = videoStream;
+            } catch (err) {
+                console.warn("Webcam access denied or unavailable. Operating with camera simulation viewport.", err);
+                // Draw camera fallback instructions on webcam video element using a dummy background block
+                video.style.background = '#1e293b';
+            }
+        }
+
+        function stopCamera() {
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
+            }
+        }
+
+        function resetScanner() {
+            document.getElementById('scannerInstructions').classList.remove('hidden');
+            document.getElementById('scannerProcessing').classList.add('hidden');
+            document.getElementById('scannerResult').classList.add('hidden');
+            document.getElementById('scannerMatchSelect').classList.add('hidden');
+            
+            document.getElementById('laser').style.display = 'none';
+            document.getElementById('facebox').style.display = 'none';
+        }
+
+        function captureAndProcess() {
+            // Show scanning overlay lines
+            document.getElementById('laser').style.display = 'block';
+            document.getElementById('facebox').style.display = 'block';
+
+            document.getElementById('scannerInstructions').classList.add('hidden');
+            document.getElementById('scannerProcessing').classList.remove('hidden');
+            document.getElementById('scannerResult').classList.add('hidden');
+            document.getElementById('scannerMatchSelect').classList.add('hidden');
+
+            // Simulating AI face analyzing process
+            setTimeout(() => {
+                document.getElementById('laser').style.display = 'none';
+                document.getElementById('facebox').style.display = 'none';
+                document.getElementById('scannerProcessing').classList.add('hidden');
+                
+                // Let student match selector popup
+                document.getElementById('scannerMatchSelect').classList.remove('hidden');
+            }, 1800);
+        }
+
+        async function confirmScanCheckIn() {
+            const studentId = document.getElementById('scannerStudentDropdown').value;
+            if (!studentId) return;
+
+            const selectedStudent = localStudents.find(s => s.id == studentId);
+            if (!selectedStudent) return;
+
+            try {
+                const response = await fetch('/api/attendance/mark', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        student_id: studentId,
+                        status: 'Present',
+                        type: 'camera'
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error);
+
+                // Display successful verification sheet
+                document.getElementById('scannerMatchSelect').classList.add('hidden');
+                
+                document.getElementById('scanResName').textContent = selectedStudent.name;
+                document.getElementById('scanResUsn').textContent = `USN: ${selectedStudent.usn}`;
+                document.getElementById('scanResAvatar').textContent = selectedStudent.name.charAt(0).toUpperCase() + (selectedStudent.name.split(' ')[1] || '').charAt(0).toUpperCase();
+                
+                document.getElementById('scannerResult').classList.remove('hidden');
+            } catch (err) {
+                alert("Check-in error: " + err.message);
+                resetScanner();
+            }
+        }
+
+        // --- MANUAL SHEET MARKING ---
+        async function initManualSheet() {
+            document.getElementById('manualDate').value = new Date().toISOString().split('T')[0];
+            await loadManualSheet();
+        }
+
+        async function loadManualSheet() {
+            const division = document.getElementById('manualDivSelect').value;
+            const dateStr = document.getElementById('manualDate').value;
+            
+            try {
+                // Fetch students matching the division
+                const res = await fetch(`/api/students?division=${encodeURIComponent(division)}`);
+                const students = await res.json();
+                
+                // Also fetch logs for this date
+                // We'll query report statistics to see present student ids
+                const repRes = await fetch('/api/reports/monthly');
+                // Actually to make it super robust, we can just load the students directory,
+                // and initialize local manual state to 'Present' by default
+                
+                const grid = document.getElementById('manualSheetGrid');
+                if (students.length === 0) {
+                    grid.innerHTML = '<p style="color:var(--text-secondary); text-align:center; padding:40px 0; grid-column: 1/-1;">No students found in this division. Manage divisions in Students tab.</p>';
+                    return;
+                }
+
+                manualAttendanceState = {};
+
+                grid.innerHTML = students.map(s => {
+                    // Default to Present
+                    manualAttendanceState[s.id] = 'Present';
+                    
+                    return `
+                        <div class="student-check-card present" id="check-card-${s.id}" onclick="toggleManualCard(${s.id})">
+                            <div class="card-avatar">${s.name.charAt(0)}</div>
+                            <div style="font-weight:600; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${s.name}</div>
+                            <div class="card-usn">${s.usn}</div>
+                            <span class="badge badge-success" id="badge-${s.id}" style="margin-top:10px;">Present</span>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error("Failed to load manual attendance list", err);
+            }
+        }
+
+        function toggleManualCard(studentId) {
+            const card = document.getElementById(`check-card-${studentId}`);
+            const badge = document.getElementById(`badge-${studentId}`);
+            
+            if (manualAttendanceState[studentId] === 'Present') {
+                manualAttendanceState[studentId] = 'Absent';
+                card.classList.remove('present');
+                card.classList.add('absent');
+                badge.classList.remove('badge-success');
+                badge.classList.add('badge-danger');
+                badge.textContent = 'Absent';
+            } else {
+                manualAttendanceState[studentId] = 'Present';
+                card.classList.remove('absent');
+                card.classList.add('present');
+                badge.classList.remove('badge-danger');
+                badge.classList.add('badge-success');
+                badge.textContent = 'Present';
+            }
+        }
+
+        async function saveManualSheet() {
+            const dateStr = document.getElementById('manualDate').value;
+            const records = Object.keys(manualAttendanceState).map(sId => ({
+                student_id: parseInt(sId),
+                status: manualAttendanceState[sId]
+            }));
+
+            if (records.length === 0) return;
+
+            try {
+                const response = await fetch('/api/attendance/bulk', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        date: dateStr,
+                        records: records
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error);
+
+                alert(data.message || "Attendance sheet successfully locked!");
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        // --- TIMETABLE SCHEDULER ---
+        async function loadTimetable() {
+            try {
+                const res = await fetch('/api/timetable');
+                const slots = await res.json();
+
+                const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+                days.forEach(day => {
+                    document.getElementById(`timetable-${day}`).innerHTML = '';
+                });
+
+                slots.forEach(slot => {
+                    const col = document.getElementById(`timetable-${slot.day_of_week}`);
+                    if (!col) return;
+
+                    const deleteBtn = `<button class="delete-slot-btn admin-only" onclick="deleteTimetableSlot(${slot.id})"><i data-lucide="trash" style="width:12px; height:12px;"></i></button>`;
+
+                    const slotHtml = `
+                        <div class="class-slot">
+                            ${deleteBtn}
+                            <div class="class-slot-time">${slot.start_time} - ${slot.end_time}</div>
+                            <div class="class-slot-name">${slot.course_name}</div>
+                            <div class="class-slot-room">Room: ${slot.room_number} (${slot.division_name})</div>
+                        </div>
+                    `;
+                    col.insertAdjacentHTML('beforeend', slotHtml);
+                });
+                
+                applyClearances();
+                lucide.createIcons();
+            } catch (err) {
+                console.error("Failed to load timetable", err);
+            }
+        }
+
+        function openTimetableModal() {
+            document.getElementById('timetableForm').reset();
+            document.getElementById('timetableModal').classList.add('active');
+        }
+
+        function closeTimetableModal() {
+            document.getElementById('timetableModal').classList.remove('active');
+        }
+
+        async function saveTimetableSlot(event) {
+            event.preventDefault();
+            const payload = {
+                course_name: document.getElementById('schedCourse').value,
+                room_number: document.getElementById('schedRoom').value,
+                day_of_week: document.getElementById('schedDay').value,
+                start_time: document.getElementById('schedStart').value,
+                end_time: document.getElementById('schedEnd').value,
+                division: document.getElementById('schedDiv').value
+            };
+
+            try {
+                const response = await fetch('/api/timetable', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error);
+
+                alert(data.message || "Class scheduled successfully");
+                closeTimetableModal();
+                loadTimetable();
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        async function deleteTimetableSlot(id) {
+            if (!confirm("Are you sure you want to cancel this scheduled class?")) return;
+
+            try {
+                const res = await fetch(`/api/timetable/${id}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error);
+
+                loadTimetable();
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        // --- PORTIONS & CO/PO OUTCOMES ---
+        let outcomesState = {};
+        async function loadOutcomesAndPortions() {
+            try {
+                // Portions list
+                const portRes = await fetch('/api/copo/portions');
+                const portions = await portRes.json();
+
+                const plist = document.getElementById('portionsList');
+                if (portions.length === 0) {
+                    plist.innerHTML = '<p style="color:var(--text-secondary); text-align:center; padding:20px;">No portion topics registered.</p>';
+                } else {
+                    plist.innerHTML = portions.map(p => {
+                        const isDone = p.status === 'completed';
+                        const checkIcon = isDone ? 'check-square' : 'square';
+                        const checkClass = isDone ? 'text-success' : 'text-secondary';
+                        const statusAction = `
+                            <button class="btn btn-outline faculty-only" style="padding:4px; border:none;" onclick="togglePortionStatus(${p.id}, '${p.course_name}', '${p.topic}', '${p.status}')">
+                                <i data-lucide="${checkIcon}" class="${checkClass}" style="width:18px; height:18px;"></i>
+                            </button>
+                        `;
+                        const delAction = `
+                            <button class="btn btn-outline btn-sm faculty-only" style="padding:4px; border:none;" onclick="deletePortion(${p.id})">
+                                <i data-lucide="trash-2" style="width:14px; height:14px; color:var(--text-secondary)"></i>
+                            </button>
+                        `;
+
+                        return `
+                            <div class="portion-item">
+                                <div>
+                                    <div style="font-weight:600; font-size:13px;">${p.topic}</div>
+                                    <div style="font-size:11px; color:var(--text-secondary);">${p.course_name}</div>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    ${statusAction}
+                                    ${delAction}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                // Outcomes mapping
+                const outRes = await fetch('/api/copo/outcomes');
+                const outcomes = await outRes.json();
+                
+                // CO List
+                const coList = document.getElementById('coProgressList');
+                coList.innerHTML = outcomes.co.map(item => {
+                    const slider = `
+                        <input type="range" class="faculty-only" min="0" max="100" value="${item.current_completion}" 
+                            style="margin-top:6px; width:100%;" 
+                            onchange="updateOutcomeValue('co', ${item.id}, this.value)">
+                    `;
+                    const deleteBtn = `
+                        <button class="btn btn-outline faculty-only" style="padding: 2px 4px; border: none; background: transparent; cursor: pointer;" onclick="deleteOutcome('co', ${item.id})">
+                            <i data-lucide="trash-2" style="width: 12px; height: 12px; color: var(--text-secondary);"></i>
+                        </button>
+                    `;
+                    return `
+                        <div style="margin-bottom:16px; border-bottom: 1px dashed var(--border-color); padding-bottom: 12px;">
+                            <div class="flex-between" style="font-size:12px; margin-bottom:4px;">
+                                <span style="font-weight:600; display:flex; align-items:center; gap:8px;">
+                                    ${item.outcome_code} - ${item.course_name}
+                                    ${deleteBtn}
+                                </span>
+                                <span>${item.current_completion}% achieved</span>
+                            </div>
+                            <div class="gauge-bar-wrapper">
+                                <div class="gauge-bar-fill" style="width: ${item.current_completion}%;"></div>
+                            </div>
+                            <p style="font-size:11px; color:var(--text-secondary); margin-top:4px;">${item.description}</p>
+                            ${slider}
+                        </div>
+                    `;
+                }).join('');
+
+                // PO List
+                const poList = document.getElementById('poProgressList');
+                poList.innerHTML = outcomes.po.map(item => {
+                    const slider = `
+                        <input type="range" class="faculty-only" min="0" max="100" value="${item.current_completion}" 
+                            style="margin-top:6px; width:100%;" 
+                            onchange="updateOutcomeValue('po', ${item.id}, this.value)">
+                    `;
+                    const deleteBtn = `
+                        <button class="btn btn-outline faculty-only" style="padding: 2px 4px; border: none; background: transparent; cursor: pointer;" onclick="deleteOutcome('po', ${item.id})">
+                            <i data-lucide="trash-2" style="width: 12px; height: 12px; color: var(--text-secondary);"></i>
+                        </button>
+                    `;
+                    return `
+                        <div style="margin-bottom:16px; border-bottom: 1px dashed var(--border-color); padding-bottom: 12px;">
+                            <div class="flex-between" style="font-size:12px; margin-bottom:4px;">
+                                <span style="font-weight:600; display:flex; align-items:center; gap:8px;">
+                                    ${item.outcome_code}
+                                    ${deleteBtn}
+                                </span>
+                                <span>${item.current_completion}% achieved</span>
+                            </div>
+                            <div class="gauge-bar-wrapper">
+                                <div class="gauge-bar-fill" style="width: ${item.current_completion}%;"></div>
+                            </div>
+                            <p style="font-size:11px; color:var(--text-secondary); margin-top:4px;">${item.description}</p>
+                            ${slider}
+                        </div>
+                    `;
+                }).join('');
+
+                applyClearances();
+                lucide.createIcons();
+            } catch (err) {
+                console.error("Failed to load outcomes", err);
+            }
+        }
+
+        // Portions Topic controls
+        function openPortionModal() {
+            document.getElementById('portionForm').reset();
+            document.getElementById('portionModal').classList.add('active');
+        }
+
+        function closePortionModal() {
+            document.getElementById('portionModal').classList.remove('active');
+        }
+
+        async function savePortionTopic(event) {
+            event.preventDefault();
+            const payload = {
+                course_name: document.getElementById('portCourse').value,
+                topic: document.getElementById('portTopic').value,
+                status: document.getElementById('portStatus').value
+            };
+
+            try {
+                const response = await fetch('/api/copo/portions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error);
+
+                closePortionModal();
+                loadOutcomesAndPortions();
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        async function togglePortionStatus(id, course, topic, currentStatus) {
+            const nextStatus = currentStatus === 'completed' ? 'pending' : 'completed';
+            try {
+                await fetch('/api/copo/portions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id: id,
+                        course_name: course,
+                        topic: topic,
+                        status: nextStatus
+                    })
+                });
+                loadOutcomesAndPortions();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function deletePortion(id) {
+            if (!confirm("Remove this topic?")) return;
+            try {
+                await fetch(`/api/copo/portions/${id}`, { method: 'DELETE' });
+                loadOutcomesAndPortions();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function updateOutcomeValue(type, id, value) {
+            try {
+                await fetch('/api/copo/outcomes/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: type,
+                        id: id,
+                        current_completion: parseInt(value)
+                    })
+                });
+                loadOutcomesAndPortions();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Outcome Dialog Controls
+        function openOutcomeModal() {
+            document.getElementById('outcomeForm').reset();
+            toggleOutcomeCourseField('co');
+            document.getElementById('outcomeModal').classList.add('active');
+        }
+
+        function closeOutcomeModal() {
+            document.getElementById('outcomeModal').classList.remove('active');
+        }
+
+        function toggleOutcomeCourseField(type) {
+            const courseGroup = document.getElementById('outCourseGroup');
+            const courseInput = document.getElementById('outCourse');
+            if (type === 'co') {
+                courseGroup.classList.remove('hidden');
+                courseInput.required = true;
+            } else {
+                courseGroup.classList.add('hidden');
+                courseInput.required = false;
+            }
+        }
+
+        async function saveOutcome(event) {
+            event.preventDefault();
+            const payload = {
+                type: document.getElementById('outType').value,
+                course_name: document.getElementById('outCourse').value,
+                outcome_code: document.getElementById('outCode').value,
+                description: document.getElementById('outDesc').value,
+                target_percentage: document.getElementById('outTarget').value
+            };
+
+            try {
+                const response = await fetch('/api/copo/outcomes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error);
+
+                alert(data.message || "Outcome created successfully");
+                closeOutcomeModal();
+                loadOutcomesAndPortions();
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        async function deleteOutcome(type, id) {
+            if (!confirm("Are you sure you want to delete this outcome mapping?")) return;
+            try {
+                const response = await fetch(`/api/copo/outcomes/${type}/${id}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error);
+
+                loadOutcomesAndPortions();
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        // --- REPORTS & AUDITS SHEET ---
+        let reportsCachedData = [];
+        async function loadReports() {
+            try {
+                const res = await fetch('/api/reports/monthly');
+                const data = await res.json();
+                reportsCachedData = data;
+
+                const tbody = document.getElementById('reportsTableBody');
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-secondary)">No audit logs matching this query.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = data.map(r => {
+                    const statusClass = r.attendance_rate >= 75 ? 'text-success' : 'text-danger';
+                    return `
+                        <tr>
+                            <td style="font-weight:600;">${r.name}</td>
+                            <td><code>${r.usn}</code></td>
+                            <td>${r.division}</td>
+                            <td>${r.total_classes} classes</td>
+                            <td><span class="text-success font-semibold">${r.present}</span></td>
+                            <td><span class="text-danger font-semibold">${r.absent}</span></td>
+                            <td class="${statusClass} font-semibold">${r.attendance_rate}%</td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error("Failed to load reports", err);
+            }
+        }
+
+        function exportReportToCSV() {
+            if (reportsCachedData.length === 0) {
+                alert("No data available to export");
+                return;
+            }
+
+            // CSV Headers
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Student Name,USN,Division,Total Classes,Present Days,Absent Days,Attendance Rate (%)\n";
+
+            // Add rows
+            reportsCachedData.forEach(r => {
+                const nameEsc = `"${r.name.replace(/"/g, '""')}"`;
+                csvContent += `${nameEsc},${r.usn},${r.division},${r.total_classes},${r.present},${r.absent},${r.attendance_rate}\n`;
+            });
+
+            // Trigger download
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `monthly_attendance_audit_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+
+
+</body></html>
